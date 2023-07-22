@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# wrapper around simplified curl that makes calls to the Linode
+# API using credentials stored in .env
+# If you do an HTTP verb that requires a body, it is read from stdin.
+
+source .env
+
+base_url=https://api.linode.com/v4
+state_file=.state
+
+httpVerb=$(echo $1 |tr '[:lower:]' '[:upper:]')
+reqPath=$2
+
+if [ "" = "$reqPath" ]; then
+	echo "Usage: $(basename $0) HTTP_VERB PATH" >&2
+	exit 1
+fi
+
+# set -x
+if [ $httpVerb = "GET" ] || [ $httpVerb = "DELETE" ]; then
+	curl -s -X$httpVerb -H "Authorization: Bearer $LINODE_TOKEN" $base_url/$reqPath
+else
+	curl -s -X$httpVerb -H "Authorization: Bearer $LINODE_TOKEN" $base_url/$reqPath -d @-
+fi

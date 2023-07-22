@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# get the status of the domain record specified in .env
+
+source .env
+
+expect() {
+	arg=$1
+	if [ "" = "$arg" ]; then
+		cat >&2
+		exit 2
+	fi
+}
+
+domainId=$(./lido GET domains |jq '.data[] | select( .domain=="'$DOMAIN_NAME'" ).id')
+
+expect $domainId <<ERROR
+Could not find domain named "$DOMAIN_NAME"
+ERROR
+
+./lido GET domains/$domainId/records |jq '.data[] | select( .name=="'$DOMAIN_RECORD_NAME'" )'

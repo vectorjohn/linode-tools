@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Using the domain and record names specified on the command line, look up
+# the domain ID and domain record ID.
+# The output is the two IDs on one line: domainId domainRecordId
+
+domainName=$1
+domainRecordName=$2
+
+expect() {
+	arg=$1
+	if [ "" = "$arg" ]; then
+		cat >&2
+		exit 2
+	fi
+}
+
+if [ "" = "$domainName" ] || [ "" = "$domainRecordName" ]; then
+	echo "Usage: $(basename $0) domainName domainRecordName " >&2
+	echo "       Example: $(basename $0) vectorjohn.com home" >&2
+	exit 1
+fi
+
+domainId=$(./lido GET domains |jq '.data[] | select( .domain=="'$domainName'" ).id')
+
+expect $domainId <<ERROR
+Could not find domain named "$domainName"
+ERROR
+
+domainRecordId=$(./lido GET domains/$domainId/records |jq '.data[] | select( .name=="'$domainRecordName'" ).id')
+
+expect $domainRecordId <<ERROR
+Could not find domain record named "$domainRecordName" in domain named "$domainName"
+ERROR
+
+echo -n $domainId $domainRecordId
