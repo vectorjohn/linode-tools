@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # wrapper around simplified curl that makes calls to the Linode
 # API using credentials stored in .env

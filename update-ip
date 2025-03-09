@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Updates the linode domain record target. The domain record
 # is looked up by name (read from .env). 

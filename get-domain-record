@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Using the domain and record names specified on the command line, look up
 # the domain ID and domain record ID.
