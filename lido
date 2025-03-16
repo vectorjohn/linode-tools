@@ -17,9 +17,10 @@ if [ "" = "$reqPath" ]; then
 	exit 1
 fi
 
+content_type="Content-type: application/json"
 # set -x
 if [ $httpVerb = "GET" ] || [ $httpVerb = "DELETE" ]; then
 	curl -s -X$httpVerb -H "Authorization: Bearer $LINODE_TOKEN" $base_url/$reqPath
 else
-	curl -s -X$httpVerb -H "Authorization: Bearer $LINODE_TOKEN" $base_url/$reqPath -d @-
+	curl -s -X$httpVerb -H "$content_type" -H "Authorization: Bearer $LINODE_TOKEN" $base_url/$reqPath -d @-
 fi
